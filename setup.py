@@ -9,6 +9,7 @@ setup(
     author='Brad Belyeu',
     author_email='bradleylamar@gmail.com',
     url='http://www.github.com/bbelyeu/Flask-SQLAlchemy-Caching',
+    download_url='https://github.com/bbelyeu/Flask-SQLAlchemy-Caching/archive/0.1.zip',
     license='MIT',
     platforms='any',
     packages=['flask_sqlalchemy_caching'],
@@ -27,5 +28,6 @@ setup(
         'Programming Language :: Python :: 3',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
-    ]
+    ],
+    keywords=['flask', 'sqlalchemy', 'caching', 'cache'],
 )
