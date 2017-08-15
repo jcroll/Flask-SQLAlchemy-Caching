@@ -1,9 +1,9 @@
 import os
 
 from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy, Model
-from flask.ext.cache import Cache
-from flask.ext.sqlalchemy_cache import CachingQuery
+from flask_sqlalchemy import SQLAlchemy, Model
+from flask_caching import Cache
+from flask_sqlalchemy_caching import CachingQuery
 
 
 app = Flask(__name__)
@@ -63,4 +63,4 @@ with app.app_context():
     make_db()
 
 cache = Cache(app)
-#cache.clear()
+# cache.clear()

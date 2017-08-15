@@ -17,7 +17,7 @@ setup(
         'Flask-Caching>=1.3.2',
         'Flask-SQLAlchemy>=2.2',
     ],
-    test_suite='flask_sqlalchemy_cache.tests',
+    test_suite='flask_sqlalchemy_caching.tests',
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',

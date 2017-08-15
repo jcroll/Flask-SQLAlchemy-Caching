@@ -1,5 +1,5 @@
-from flask.ext.sqlalchemy import get_debug_queries
-from flask.ext.sqlalchemy_cache import RelationshipCache
+from flask_sqlalchemy import get_debug_queries
+from flask_sqlalchemy_caching import RelationshipCache
 
 from _base import app, cache, db, State, City
 
@@ -8,4 +8,4 @@ with app.app_context():
     q = City.query.options(db.joinedload(City.state), rc)
     for item in q:
         assert "Brazil" == item.state.country.name
-    print '%d queries executed.' % len(get_debug_queries())
+    print('{} queries executed.'.format(len(get_debug_queries())))

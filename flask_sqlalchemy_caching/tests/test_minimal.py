@@ -2,9 +2,9 @@
 import unittest
 
 from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy, Model
-from flask.ext.cache import Cache
-from flask.ext.sqlalchemy_cache import CachingQuery, FromCache
+from flask_sqlalchemy import SQLAlchemy, Model
+from flask_caching import Cache
+from flask_sqlalchemy_caching import CachingQuery, FromCache
 
 Model.query_class = CachingQuery
 
