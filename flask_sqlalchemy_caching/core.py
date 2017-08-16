@@ -44,8 +44,8 @@ class CachingQuery(BaseQuery):
         the items in the cache are not the same ones in the current Session.
         """
         if hasattr(self, '_cache'):
-            func = lambda: list(BaseQuery.__iter__(self))
-            return iter(self.get_value(createfunc=func))
+            def create_func(): return list(BaseQuery.__iter__(self))
+            return iter(self.get_value(createfunc=create_func))
         else:
             return BaseQuery.__iter__(self)
 
@@ -98,21 +98,15 @@ class CachingQuery(BaseQuery):
         Given a Query, create a cache key.
 
         There are many approaches to this; here we use the simplest, which is
-        to create an md5 hash of the text of the SQL statement, combined with
-        stringified versions of all the bound parameters within it.
+        to create an md5 hash of the text of the SQL statement compiled with
+        the bound parameters in it.
 
         There's a bit of a performance hit with compiling out "query.statement"
         here; other approaches include setting up an explicit cache key with a
         particular Query, then combining that with the bound parameter values.
         """
         stmt = self.with_labels().statement
-        compiled = stmt.compile()
-        params = compiled.params
-
-        values = [str(compiled)]
-        for k in sorted(params):
-            values.append(repr(params[k]))
-        key = u" ".join(values)
+        key = str(stmt.compile(compile_kwargs={'literal_binds': True}))
         return md5(key.encode('utf8')).hexdigest()
 
 
