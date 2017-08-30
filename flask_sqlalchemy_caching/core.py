@@ -1,11 +1,13 @@
 # coding: utf-8
 """Flask-SQLAlchemy-Cache
 
-A SQLAlchemy CachingQuery implementation for Flask, using Flask-Cache.
+A SQLAlchemy CachingQuery implementation for Flask, using Flask-Caching
 
 It is based in SQLAlchemy docs example:
 http://docs.sqlalchemy.org/en/latest/orm/examples.html#module-examples.dogpile_caching
 """
+import random
+import time
 from hashlib import md5
 
 from sqlalchemy.orm.interfaces import MapperOption
@@ -51,16 +53,37 @@ class CachingQuery(BaseQuery):
 
     def _get_cache_plus_key(self):
         """Return a cache region plus key."""
-        key = getattr(self, '_cache_key', self.key_from_query())
-        return self._cache.cache, key
+        return self._cache.cache, self._get_key()
+
+    def _get_key(self, ignore_ns=False):
+        """Get the cache key."""
+        key = getattr(self._cache, 'cache_key', None)
+        if key is None:
+            key = self.key_from_query()
+
+        if self._cache.namespace_key and not ignore_ns:
+            ns_val = self._cache.cache.get(self._cache.namespace_key)
+            if not ns_val:
+                # If the namespace key doesn't exist, create it. But start at the current
+                # timestamp plus milliseconds and a 3 digit random number to avoid race
+                # conditions.
+                ns_val = int(time.time() * 1000 + random.randint(0, 999))
+                self._cache.cache.set(self._cache.namespace_key, ns_val)
+            key = 'v{}.{}'.format(ns_val, key)
+
+        return key
 
     def invalidate(self):
         """Invalidate the cache value represented by this Query."""
         cache, cache_key = self._get_cache_plus_key()
         cache.delete(cache_key)
+        if self._cache.namespace_key:
+            cache.incr(self._cache.namespace_key)
+            # Also invalidate if the key exists without a namespace version prepended
+            cache.delete(self._get_key(ignore_ns=True))
 
-    def get_value(self, merge=True, createfunc=None,
-                  expiration_time=None, ignore_expiration=False):
+    def get_value(self, merge=True, createfunc=None, expiration_time=None,
+                  ignore_expiration=False):
         """
         Return the value from the cache for this query.
         """
@@ -112,23 +135,30 @@ class CachingQuery(BaseQuery):
 
 class _CacheableMapperOption(MapperOption):
 
-    def __init__(self, cache, cache_key=None):
+    def __init__(self, cache, cache_key=None, namespace_key=None):
         """
         Construct a new `_CacheableMapperOption`.
 
-        :param cache: the cache.  Should be a Flask-Cache instance.
+        :param cache: the cache.  Should be a Flask-Caching instance.
 
         :param cache_key: optional.  A string cache key that will serve as
         the key to the query. Use this if your query has a huge amount of
         parameters (such as when using in_()) which correspond more simply to
         some other identifier.
+
+        :param namespace_key: optional.  A string cache key that can be used
+        to group like cache keys. For example, if you are using offset & limit
+        at the db level to paginate rows returned, and a new row is added,
+        instead of invalidating all keys individually, only the namespace_key
+        needs invalidated by incrementing.
         """
         self.cache = cache
         self.cache_key = cache_key
+        self.namespace_key = namespace_key
 
     def __getstate__(self):
         """
-        Flask-Cache instance is not picklable because it has references
+        Flask-Caching instance is not picklable because it has references
         to Flask.app. Also, I don't want it cached.
         """
         d = self.__dict__.copy()

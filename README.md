@@ -3,7 +3,7 @@ Flask-SQLAlchemy-Caching
 
 This is a fork of (iurisilvio's Flask-SQLAlchemy-Cache)[https://github.com/iurisilvio/Flask-SQLAlchemy-Cache]
 
-A CachingQuery implementation to Flask using Flask-SQLAlchemy and Flask-Cache.
+A CachingQuery implementation to Flask using Flask-SQLAlchemy and Flask-Caching.
 
 To start using caching queries, you just have to replace Flask-SQLAlchemy `Model.query_class`.
 
