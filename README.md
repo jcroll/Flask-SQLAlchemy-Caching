@@ -23,7 +23,7 @@ After that, you can just make queries to a model `YourModel`:
 from flask_sqlalchemy_caching import FromCache
 
 # cache is a Flask-Caching instance imported for your app init
-YourModel.query.options(FromCache(cache)).first()
+YourModel.query.options(FromCache(cache)).get()
 ```
 
 You also have `RelationshipCache` to enable lazy loading relationships from
@@ -34,10 +34,16 @@ from sqlalchemy.orm import lazyload
 from flask_sqlalchemy_caching import RelationshipCache
 
 rc = RelationshipCache(YourModel.some_relationship, cache)
-obj = YourModel.query.options(lazyload(YourModel.some_relationship), rc).first()
+obj = YourModel.query.options(lazyload(YourModel.some_relationship), rc).get()
 
 # make the query and cache the results for future queries
 print(obj.some_relationship)
+```
+
+If there is a column in your table that is much more dynamic and you want to exclude it from
+being cached, try using a deferred query like:
+```python
+YourModel.query.options(defer('crazy_column')).options(FromCache(cache)).get()
 ```
 
 Take a look at [Dogpile Caching example][] to more details about how
