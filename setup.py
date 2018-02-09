@@ -4,12 +4,12 @@ from setuptools import setup
 
 setup(
     name='Flask-SQLAlchemy-Caching',
-    version='1.0.1',
+    version='1.0.2',
     description='CachingQuery implementation to Flask using Flask-SQLAlchemy and Flask-Caching',
     author='Brad Belyeu',
-    author_email='developers@youversion.com',
-    url='http://www.github.com/youversion/Flask-SQLAlchemy-Caching',
-    download_url='https://github.com/youversion/Flask-SQLAlchemy-Caching/archive/1.0.1.zip',
+    author_email='bradleylamar@gmail.com',
+    url='http://www.github.com/bbelyeu/Flask-SQLAlchemy-Caching',
+    download_url='https://github.com/bbelyeu/Flask-SQLAlchemy-Caching/archive/1.0.2.zip',
     license='MIT',
     platforms='any',
     packages=['flask_sqlalchemy_caching'],
