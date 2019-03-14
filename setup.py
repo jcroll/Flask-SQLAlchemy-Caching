@@ -2,6 +2,9 @@
 
 from setuptools import setup
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='Flask-SQLAlchemy-Caching',
     version='1.0.2',
@@ -10,6 +13,8 @@ setup(
     author_email='bradleylamar@gmail.com',
     url='http://www.github.com/bbelyeu/Flask-SQLAlchemy-Caching',
     download_url='https://github.com/bbelyeu/Flask-SQLAlchemy-Caching/archive/1.0.2.zip',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     license='MIT',
     platforms='any',
     packages=['flask_sqlalchemy_caching'],
