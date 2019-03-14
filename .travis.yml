@@ -1,18 +1,13 @@
 language: python
 
 python:
-  - 2.7
   - 3.3
   - 3.4
   - 3.5
-
-matrix:
-  include:
-    - python: 2.7
-    - FLASK="<0.10"
+  - 3.6
 
 install:
-  - pip install flask$FLASK
+  - pip install flask
   - pip install pytest coverage coveralls
   - python setup.py install
 
