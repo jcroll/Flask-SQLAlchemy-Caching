@@ -129,7 +129,7 @@ class CachingQuery(BaseQuery):
         particular Query, then combining that with the bound parameter values.
         """
         stmt = self.with_labels().statement
-        key = str(stmt.compile(compile_kwargs={'literal_binds': True}))
+        key = stmt.compile(compile_kwargs={'literal_binds': True}).__str__()
         return md5(key.encode('utf8')).hexdigest()
 
 
