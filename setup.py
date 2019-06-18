@@ -7,12 +7,12 @@ with open("README.md", "r") as fh:
 
 setup(
     name='Flask-SQLAlchemy-Caching',
-    version='1.0.3',
+    version='1.0.4',
     description='CachingQuery implementation to Flask using Flask-SQLAlchemy and Flask-Caching',
     author='Brad Belyeu',
     author_email='bradleylamar@gmail.com',
     url='http://www.github.com/bbelyeu/Flask-SQLAlchemy-Caching',
-    download_url='https://github.com/bbelyeu/Flask-SQLAlchemy-Caching/archive/1.0.3.zip',
+    download_url='https://github.com/bbelyeu/Flask-SQLAlchemy-Caching/archive/1.0.4.zip',
     long_description=long_description,
     long_description_content_type="text/markdown",
     license='MIT',
