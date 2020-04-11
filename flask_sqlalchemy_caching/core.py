@@ -51,6 +51,29 @@ class CachingQuery(BaseQuery):
         else:
             return BaseQuery.__iter__(self)
 
+    def _execute_and_instances(self, context):
+        """override _execute_and_instances to pull results from dogpile
+                if the query is invoked directly from an external context.
+               This method is necessary in order to maintain compatibility
+               with the "baked query" system now used by default in some
+               relationship loader scenarios.   Note also the
+               RelationshipCache._generate_cache_key method which enables
+               the baked query to be used within lazy loads.
+               .. versionadded:: 1.2.7
+            """
+        super_ = super(CachingQuery, self)
+
+        if context.query is not self and hasattr(self, "_cache"):
+            # special logic called when the Query._execute_and_instances()
+            # method is called directly from the baked query
+            return iter(
+                self.get_value(
+                    createfunc=lambda: list(super_._execute_and_instances(context))
+                )
+            )
+        else:
+            return super_._execute_and_instances(context)
+
     def _get_cache_plus_key(self):
         """Return a cache region plus key."""
         return self._cache.cache, self._get_key()

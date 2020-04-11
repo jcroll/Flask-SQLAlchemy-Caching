@@ -46,6 +46,16 @@ being cached, try using a deferred query like:
 YourModel.query.options(defer('crazy_column')).options(FromCache(cache)).get()
 ```
 
+You can also integrate with [baked queries](https://docs.sqlalchemy.org/en/13/orm/extensions/baked.html) like so:
+```python
+baked_query = bakery(lambda session: session.query(YourModel))
+baked_query += lambda q: q.filter(YourModel.id == bindparam('id'))
+
+obj = baked_query(YourModel.query.session) \
+.with_post_criteria(lambda q: q.options(FromCache(cache))) \
+.params(id=id).one()
+```
+
 Take a look at [Dogpile Caching example][] to more details about how
 `CachingQuery` works. Most changes to their were made just to integrate it
 with Flask, Flask-SQLAlchemy and Flask-Caching instead of Dogpile.
